@@ -1,0 +1,24 @@
+{
+  "name": "cute.curl",
+  "version": "1.0.0",
+  "description": "smart curl which is cute",
+  "main": "index.js",
+  "dependencies": {
+    "commander": "^7.2.0",
+    "got": "^11.8.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apporoad/cute.curl.js.git"
+  },
+  "author": "apporoad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apporoad/cute.curl.js/issues"
+  },
+  "homepage": "https://github.com/apporoad/cute.curl.js#readme"
+}
