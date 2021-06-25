@@ -1,5 +1,6 @@
 
 var req  = require('mini.req.js')
+var qs = require('querystring')
 
 
 function isJson(obj){
@@ -63,6 +64,17 @@ exports.invoke = function(cmds , options){
                 }else{
                     //剩余的就是数据
                     data = oneStr
+
+                    if(data){
+                        // form json 判断
+                        if(data.indexOf('{') == 0){
+                            data = JSON.parse(data)
+                        }else{
+                            data = qs.parse(data)
+                            options.type = 'form'
+                        }
+                    }
+                    
                 }
                 break
         }
