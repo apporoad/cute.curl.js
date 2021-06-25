@@ -1,6 +1,15 @@
 
 var req  = require('mini.req.js')
 
+
+function isJson(obj){
+	var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length; 
+	return isjson;
+}
+
+function resolveMsg(msg){
+    return isJson(msg) ? JSON.stringify(msg) : msg
+}
 /**
  * 处理头
  * @param {*} headers 
@@ -11,7 +20,7 @@ var resolveHeaders = function(headers){
         return null
     }
     if(typeof headers == 'string'){
-
+        //todo
     }
     return headers
 }
@@ -64,5 +73,35 @@ exports.invoke = function(cmds , options){
         return
     }
 
+    if(options.verbose){
+        console.log('url : ' + url)
+        console.log('method : ' + method.toUpperCase())
+        console.log('data : ' + resolveMsg(data))
+    }
 
+    req(url, method, data ,options).then(function(data){
+
+        if(options.slient){
+            if(options.verbose){
+                console.log('response : ' + resolveMsg(data))
+            }
+    
+        }else{
+            if(options.output){
+                //todo
+            }else{
+                console.log('response : ' + resolveMsg(data))
+            }
+        }
+
+        
+    }).catch(err =>{
+        if(!options.slient){
+            console.error(resolveMsg(err))
+        }else{
+            if(options.verbose){
+                console.error(resolveMsg(err))
+            }
+        }
+    })
 }

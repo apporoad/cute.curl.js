@@ -14,3 +14,15 @@ cute "{abc:1,hello:'world'}"  slient  -h header1:abc  get "http://lisa.com/abc/c
 
 cute "abc=1&cc=ccc"  -h header1:abc  post  "http://lisa.com/abc/cc"  
 ```
+
+
+
+## dev
+```bash
+npm i -g aok.js
+
+aok test -p 19999
+
+node test
+
+```
