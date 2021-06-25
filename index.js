@@ -48,15 +48,12 @@ exports.invoke = function(cmds , options){
     var method = 'get'
     var data = null
 
-    var iOptions = {
-        slient : false
-    }
     cmds.forEach(oneStr => {
         //先判断是否是方法
         switch(oneStr.toLowerCase()){
             case 'slient':
             case 's':
-                iOptions.slient = true
+                options.slient = true
                 break
             case 'get':
             case 'post':
