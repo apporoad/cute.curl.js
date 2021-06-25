@@ -5,6 +5,10 @@ smart url  for  easy use
 ## use 
 
 ```bash
+
+npm i -g cute.curl
+
+
 cute get "http://lisa.com/abc/cc"  "{abc:1,hello:'world'}"  slient  -h header1:abc
 
 cute "{abc:1,hello:'world'}"  slient  -h header1:abc  get "http://lisa.com/abc/cc"  
