@@ -28,9 +28,9 @@ if(program.args.length>0){
     options.output = optionsOut.output || null
     
     
-    console.log(JSON.stringify(options))
+    // console.log(JSON.stringify(options))
     
-    console.log(JSON.stringify(program.args))
+    // console.log(JSON.stringify(program.args))
     
     curl.invoke(program.args, options)
     
