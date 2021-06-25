@@ -1,7 +1,17 @@
 
 var req  = require('mini.req.js')
 var qs = require('querystring')
+var hparse = require('parse-headers')
 
+function powerParse(str){
+    try{
+        return JSON.parse(str)
+    }catch{
+        var value = null
+        eval('value = ' + str)
+        return value
+    }
+}
 
 function isJson(obj){
 	var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length; 
@@ -20,8 +30,9 @@ var resolveHeaders = function(headers){
     if(!headers){
         return null
     }
-    if(typeof headers == 'string'){
-        //todo
+    if(headers.length > 0){
+        // var harray = headers.split(/[;,&]/g)
+        return hparse(headers.join('\n'))
     }
     return headers
 }
@@ -68,7 +79,7 @@ exports.invoke = function(cmds , options){
                     if(data){
                         // form json 判断
                         if(data.indexOf('{') == 0){
-                            data = JSON.parse(data)
+                            data = powerParse(data)
                         }else{
                             data = qs.parse(data)
                             options.type = 'form'

@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "commander": "^7.2.0",
-    "mini.req.js": "^1.2.0"
+    "mini.req.js": "^1.2.0",
+    "parse-headers": "^2.0.3"
   },
   "devDependencies": {},
   "scripts": {
@@ -19,6 +20,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/apporoad/cute.curl.js/issues"
+  },
+  "bin" : {
+    "cute" : "bin.js"
   },
   "homepage": "https://github.com/apporoad/cute.curl.js#readme"
 }

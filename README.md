@@ -25,4 +25,9 @@ aok test -p 19999
 
 node test
 
+
+node bin.js http://localhost:19999/abc  post  'hello world' -H aaa:33 -H bb:3
+
 ```
+
+
