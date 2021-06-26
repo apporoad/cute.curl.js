@@ -2,6 +2,8 @@
 var req  = require('mini.req.js')
 var qs = require('querystring')
 var hparse = require('parse-headers')
+var fs = require('fs')
+var path = require('path')
 
 function powerParse(str){
     try{
@@ -43,6 +45,26 @@ exports.invoke = function(cmds , options){
     options.output = options.output || null
     options.headers = resolveHeaders(options.headers)
     options.verbose = options.verbose  || false
+
+    var extObject = null
+    if(options.ext){
+        // ext.js 
+        var realPath = path.resolve(process.cwd(), options.ext)
+        if(fs.existsSync(realPath)){
+            extObject = require(realPath)
+        }else{
+            var vaule = null
+            try{
+                eval('value = ' + options.ext)
+            }catch(ex){
+                console.error('ext error :  ext语句错误，请检查' )
+                return
+            }
+        }
+    }
+
+    var handlerOptions = Object.assign({}, options)
+    
 
     var url = null
     var method = 'get'
@@ -99,13 +121,18 @@ exports.invoke = function(cmds , options){
         console.log('data : ' + resolveMsg(data))
     }
 
+    handlerOptions.url = url
+    handlerOptions.method = method
+    handlerOptions.data = data
+    
     req(url, method, data ,options).then(function(data){
-
+        if(extObject && extObject.resultHandler){
+            extObject.resultHandler(data,handlerOptions)
+        }
         if(options.slient){
             if(options.verbose){
                 console.log('response : ' + resolveMsg(data))
             }
-    
         }else{
             if(options.output){
                 //todo
