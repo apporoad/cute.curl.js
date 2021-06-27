@@ -16,7 +16,7 @@ program.version(require('./package.json').version)
     .option('-e --encoding [encoding]' , ' encoding of your file ,default is utf8')
     .option('-o --output [file]', '输出文件')
     .option('-v --verbose' , '打印多余内容')
-    .option('-x --ext', '扩展方法，支持js方式扩展')
+    .option('-x --ext [ext]', '扩展方法，支持js方式扩展')
     .parse(process.argv)
 
 const optionsOut = program.opts();

@@ -1,4 +1,3 @@
-
 var req  = require('mini.req.js')
 var qs = require('querystring')
 var hparse = require('parse-headers')
@@ -23,6 +22,17 @@ function isJson(obj){
 function resolveMsg(msg){
     return isJson(msg) ? JSON.stringify(msg) : msg
 }
+
+function resolveMsgEx (msg,fn){
+    if(msg && msg.then){
+        msg.then(function(d){
+            fn(resolveMsg(d))
+        })
+    }else{
+        fn(resolveMsg(msg))
+    }
+}
+
 /**
  * 处理头
  * @param {*} headers 
@@ -51,11 +61,26 @@ exports.invoke = function(cmds , options){
         // ext.js 
         var realPath = path.resolve(process.cwd(), options.ext)
         if(fs.existsSync(realPath)){
-            extObject = require(realPath)
+            var value = require(realPath)
+            if(typeof value == "function"){
+                extObject = {
+                    resultHandler : value
+                }
+            }else{
+                extObject = value
+            }
         }else{
             var vaule = null
             try{
                 eval('value = ' + options.ext)
+                if(typeof value == "function"){
+                    extObject = {
+                        resultHandler : value
+                    }
+                }else{
+                    extObject = value
+                }
+                
             }catch(ex){
                 console.error('ext error :  ext语句错误，请检查' )
                 return
@@ -64,8 +89,6 @@ exports.invoke = function(cmds , options){
     }
 
     var handlerOptions = Object.assign({}, options)
-    
-
     var url = null
     var method = 'get'
     var data = null
@@ -89,12 +112,13 @@ exports.invoke = function(cmds , options){
             default:
                 var lowerCase = oneStr.toLowerCase()
                 //是否是url  "http://"  http:
-                if(lowerCase.indexOf('http') >-1 && lowerCase.indexOf('http') < 2 && lowerCase.indexOf(':') > -1){
+                if(oneStr.indexOf('>') == 0){
+                    options.output = oneStr
+                }else if(lowerCase.indexOf('http') >-1 && lowerCase.indexOf('http') < 2 && lowerCase.indexOf(':') > -1){
                     url = oneStr
                 }else{
                     //剩余的就是数据
                     data = oneStr
-
                     if(data){
                         // form json 判断
                         if(data.indexOf('{') == 0){
@@ -126,22 +150,19 @@ exports.invoke = function(cmds , options){
     handlerOptions.data = data
     
     req(url, method, data ,options).then(function(data){
+        var odata = data
+        // console.log(extObject)
         if(extObject && extObject.resultHandler){
-            extObject.resultHandler(data,handlerOptions)
+            odata = extObject.resultHandler(data,handlerOptions) || data
         }
-        if(options.slient){
-            if(options.verbose){
-                console.log('response : ' + resolveMsg(data))
-            }
+        if(options.output){
+            resolveMsgEx(odata,function (d) {
+                writeFile(options.output, d,options)
+            })
         }else{
-            if(options.output){
-                //todo
-            }else{
-                console.log('response : ' + resolveMsg(data))
-            }
+            // console.log('response : ' + resolveMsg(data))
+            resolveMsgEx(odata,console.log)
         }
-
-        
     }).catch(err =>{
         if(!options.slient){
             console.error(resolveMsg(err))
@@ -151,4 +172,24 @@ exports.invoke = function(cmds , options){
             }
         }
     })
+}
+
+function writeFile(output,content,options) {
+    var isAppend = false
+    if(output.indexOf('>>') == 0){
+        isAppend = true
+    }
+    var filename = output.replace(/>/g,'')
+    var realPath = path.resolve(process.cwd(), filename)
+    if( isAppend && fs.existsSync(realPath)){
+        fs.appendFile(realPath, content , function (err) {
+            if (err) throw err;
+            if(!options.slient)
+                console.log('append to :' + realPath);
+          });
+    }else{
+        fs.writeFileSync(realPath, content)
+        if(!options.slient)
+            console.log('write to :' + realPath)
+    }
 }

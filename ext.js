@@ -1,3 +1,0 @@
-exports.resultHandler = function(result){
-    
-}
