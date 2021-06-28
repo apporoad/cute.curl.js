@@ -59,6 +59,17 @@ node bin.js http://localhost:19999/abc  post  'hello world' -H aaa:33 -H bb:3 -o
 
 ```
 
+### clipboard
+1. data from clipboard
+```bash
+cute http://localhost:11540/ post -c -v
+```
+2. url from clipbord
+
+```bash
+cute  post "{hello : 'good good day'}"  -v
+```
+
 ### ext
 ```bash
 # 1 
