@@ -119,6 +119,12 @@ exports.invoke = function(cmds , options){
                 }else{
                     //剩余的就是数据
                     data = oneStr
+                    //文件判断
+                    var realPath = path.resolve(process.cwd(), data)
+                    if(fs.existsSync(realPath)){
+                        var encoding = options.encoding || 'utf8'
+                        data = fs.readFileSync(realPath,encoding)
+                    }
                     if(data){
                         // form json 判断
                         if(data.indexOf('{') == 0){

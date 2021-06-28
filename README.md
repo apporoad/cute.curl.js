@@ -37,6 +37,14 @@ node bin.js http://localhost:19999/abc  post  'hello world' -H aaa:33 -H bb:3
 
 ## ext use
 
+### data from file
+```bash
+node bin.js http://localhost:19999/abc  post  'hello world' -H aaa:33 -H bb:3  data.json
+
+node bin.js http://localhost:19999/abc  post  'hello world' -H aaa:33 -H bb:3 data.txt
+
+```
+
 ### output
 ```bash
 # write to file temp/1.txt
