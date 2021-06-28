@@ -97,6 +97,7 @@ exports.invoke = function(cmds , options){
         //先判断是否是方法
         switch(oneStr.toLowerCase()){
             case 'slient':
+            case 'silent':
             case 's':
                 options.slient = true
                 break
@@ -167,7 +168,10 @@ exports.invoke = function(cmds , options){
             })
         }else{
             // console.log('response : ' + resolveMsg(data))
-            resolveMsgEx(odata,console.log)
+            // console.log('+++++++++++')
+            if(!options.slient){
+                resolveMsgEx(odata,console.log)
+            }
         }
     }).catch(err =>{
         if(!options.slient){
