@@ -95,6 +95,10 @@ exports.invoke = function(cmds , options){
     var data = null
 
     cmds.forEach(oneStr => {
+        if(!oneStr){
+            return
+        }
+        oneStr = oneStr.trim()
         //先判断是否是方法
         switch(oneStr.toLowerCase()){
             case 'slient':

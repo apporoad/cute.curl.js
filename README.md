@@ -17,6 +17,9 @@ cute "{abc:1,hello:'world'}"  slient  -H header1:abc  get "http://lisa.com/abc/c
 
 cute "abc=1&cc=ccc"  -H header1:abc  post  "http://lisa.com/abc/cc"  
 
+
+cute -h
+
 ```
 
 
@@ -67,7 +70,25 @@ cute http://localhost:11540/ post -c -v
 2. url from clipbord
 
 ```bash
-cute  post "{hello : 'good good day'}"  -v
+cute  post "{hello : 'good good day'}"  -v -c
+```
+
+3. 自动抓取剪切板内容
+剪切板：  cute  post "{hello : 'good good day'}" 
+
+```bash
+cute
+```
+
+4. 自定义剪切板内容分割 
+```bash
+#   以&&作为分隔符
+cute  post "{hello : 'good good day'}"  -v -c -i "&&"
+```
+
+5. 忽略剪切板内容
+```bash
+cute -u
 ```
 
 ### ext

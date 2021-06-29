@@ -19,16 +19,36 @@ program.version(require('./package.json').version)
     .option('-v --verbose' , '打印多余内容')
     .option('-x --ext [ext]', '扩展方法，支持js方式扩展')
     .option('-c --clipboard' , '抓取剪切板的内容')
+    .option('-i --split [split]' , '抓取剪切板内容时，分隔用的符号，默认@@')
+    .option('-u --pure','禁止自动抓取剪切板内容')
     .parse(process.argv)
 
 const optionsOut = program.opts();
-
+optionsOut.split = optionsOut.split || '@@'
 //添加剪切板内容
 var argArray = []
-if(optionsOut.clipboard){
-    var clip = clipboardy.readSync()
+if(!optionsOut.pure){
+    var clip = clipboardy.readSync().trim()
     if(clip){
-        argArray.push(clip)
+        //cute 开头，代表是cute内容
+        if(clip.indexOf('cute ') == 0){
+            // clip = clip.substring(5).trim()
+            optionsOut.clipboard = true
+        }
+        if(optionsOut.clipboard){
+            //去除cute这种特殊内容
+            if(clip.indexOf('cute ') == 0){
+                clip = clip.substring(5).trim()
+            }
+            if(clip){
+                //分隔
+                if(clip.indexOf(optionsOut.split)){
+                    argArray = argArray.concat(clip.split(optionsOut.split))
+                }else{
+                    argArray.push(clip)
+                }
+            }
+        }
     }
 }
 argArray = argArray.concat(program.args)
@@ -41,6 +61,7 @@ if(argArray.length>0){
     options.output = optionsOut.output || null
     options.ext = optionsOut.ext || null
     options.clipboard = optionsOut.clipboard
+    options.split = optionsOut.split
     
     // console.log(JSON.stringify(options))
     // console.log(JSON.stringify(program.args))
